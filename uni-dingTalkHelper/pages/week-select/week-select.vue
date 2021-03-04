@@ -8,7 +8,7 @@
 				</template>
 			</uni-list-item>
 		</uni-list>
-		
+
 		<u-button class="confirm-btn" :ripple="true" type="primary" shape="circle" @click="confirmClick">保存</u-button>
 	</view>
 </template>
@@ -43,7 +43,7 @@
 		},
 		onLoad() {
 			const weekStorage = uni.getStorageSync(this.$config.weekStorageKey);
-			if(weekStorage){
+			if (weekStorage) {
 				this.weekArr = JSON.parse(weekStorage);
 			}
 		},
@@ -51,8 +51,8 @@
 			weekItemClick(item, index) {
 				item.checked = !item.checked;
 			},
-			confirmClick(){
-				uni.setStorageSync(this.$config.weekStorageKey,JSON.stringify(this.weekArr));
+			confirmClick() {
+				uni.setStorageSync(this.$config.weekStorageKey, JSON.stringify(this.weekArr));
 				uni.$emit('update-week');
 				uni.navigateBack({
 					delta: 1
@@ -63,11 +63,12 @@
 </script>
 
 <style lang="scss" scoped>
-	.content{
-		.check-mark-selected{
+	.content {
+		.check-mark-selected {
 			color: $uni-color-primary;
 		}
-		.check-mark-unselected{
+
+		.check-mark-unselected {
 			color: $uni-text-color-disable;
 		}
 	}

@@ -13,6 +13,9 @@
 </script>
 
 <style lang="scss">
+	page{
+		height: 100%;
+	}
 	.confirm-btn{
 		width: calc(100% - 60rpx);
 		margin-left: 30rpx;

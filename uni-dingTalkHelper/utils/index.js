@@ -3,23 +3,27 @@
 import config from '../config/index.js'
 
 function openDingTalk(errback) {
-	if (!isApp()) {
-		errback('请在App中运行！');
-		return;
-	}
-	if (plus.os.name === 'Android') {
-		plus.runtime.launchApplication({
-			pname: config.dingTalkPname
-		}, (err) => {
-			errback(err.message);
-		});
-	} else if (plus.os.name === 'iOS') {
-		plus.runtime.launchApplication({
-			action: config.dingTalkScheme
-		}, (err) => {
-			errback(err.message);
-		});
-	}
+	return new Promise(function(resolve, reject) {
+		if (!isApp()) {
+			reject('请在App中运行！');
+		}else{
+			if (plus.os.name === 'Android') {
+				plus.runtime.launchApplication({
+					pname: config.dingTalkPname
+				}, (err) => {
+					reject(err.message);
+				});
+				resolve();
+			} else if (plus.os.name === 'iOS') {
+				plus.runtime.launchApplication({
+					action: config.dingTalkScheme
+				}, (err) => {
+					reject(err.message);
+				});
+				resolve();
+			}
+		}
+	})
 }
 
 function isApp() {
@@ -94,6 +98,14 @@ function getDiffTimeToCurrentTime(dateStr) {
 	return disTime;
 }
 
+function getMinAndSecondDiff(startMin, endMin){
+	const startMinArr = startMin.split(':');
+	const startTotalMin = startMinArr.length === 2 ? (parseInt(startMinArr[0]) * 60 + parseInt(startMinArr[1])) : 0;
+	const endMinArr = endMin.split(':');
+	const endTotalMin = endMinArr.length === 2 ? (parseInt(endMinArr[0]) * 60 + parseInt(endMinArr[1])) : 0;
+	return endTotalMin - startTotalMin;
+}
+
 function getRandomMinAndSecond(startMin, endMin) {
 	const startMinArr = startMin.split(':');
 	const startTotalMin = startMinArr.length === 2 ? (parseInt(startMinArr[0]) * 60 + parseInt(startMinArr[1])) : 0;
@@ -127,5 +139,6 @@ module.exports = {
 	isDingtalkInstalled,
 	getRandomMinAndSecond,
 	getNextClockFullTime,
-	getDateForYYMMDDHHMMSS
+	getDateForYYMMDDHHMMSS,
+	getMinAndSecondDiff
 }

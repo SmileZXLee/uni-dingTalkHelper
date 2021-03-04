@@ -14,7 +14,7 @@
 					<view class="list-item-subtitle">{{gotoStartTimerPickerConfig.value.length?gotoStartTimerPickerConfig.value:'点击设置'}}</view>
 				</template>
 			</uni-list-item>
-			
+
 			<uni-list-item title="【上班】打卡结束时间" clickable @click="gotoEndTimerPickerConfig.show=true">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{gotoEndTimerPickerConfig.value.length?gotoEndTimerPickerConfig.value:'点击设置'}}</view>
@@ -49,41 +49,60 @@
 			</uni-list-item>
 			<uni-section title="功能测试"></uni-section>
 			<uni-list-item title="测试打开钉钉" clickable showArrow="true" @click="openDingtalkClick">
-				
+
+			</uni-list-item>
+			<uni-section title="其他"></uni-section>
+			<uni-list-item title="自动打卡记录" to="/pages/clock-history/clock-history" showArrow="true">
+			</uni-list-item>
+			<uni-list-item title="开源地址" clickable @click="copyOpenSourceUrl">
+				<template slot="footer">
+					<view class="list-item-subtitle">点击复制</view>
+				</template>
+			</uni-list-item>
+			<uni-list-item title="加入反馈QQ群" clickable @click="openQQGroup" showArrow="true">
 			</uni-list-item>
 		</uni-list>
-		<u-picker @confirm="e=>{timePickerConfirm(e,1)}" mode="time" :title="gotoStartTimerPickerConfig.title" :default-time="gotoStartTimerPickerConfig.value.length?gotoStartTimerPickerConfig.value:gotoStartTimerPickerConfig.default" :params="{'hour': true,'minute': true}" v-model="gotoStartTimerPickerConfig.show"></u-picker>
-		<u-picker @confirm="e=>{timePickerConfirm(e,2)}" mode="time" :title="gotoEndTimerPickerConfig.title" :default-time="gotoEndTimerPickerConfig.value.length?gotoEndTimerPickerConfig.value:gotoEndTimerPickerConfig.default" :params="{'hour': true,'minute': true}" v-model="gotoEndTimerPickerConfig.show"></u-picker>
-		<u-picker @confirm="e=>{timePickerConfirm(e,3)}" mode="time" :title="gooffStartTimerPickerConfig.title" :default-time="gooffStartTimerPickerConfig.value.length?gooffStartTimerPickerConfig.value:gooffStartTimerPickerConfig.default" :params="{'hour': true,'minute': true}" v-model="gooffStartTimerPickerConfig.show"></u-picker>
-		<u-picker @confirm="e=>{timePickerConfirm(e,4)}" mode="time" :title="gooffEndTimerPickerConfig.title" :default-time="gooffEndTimerPickerConfig.value.length?gooffEndTimerPickerConfig.value:gooffEndTimerPickerConfig.default" :params="{'hour': true,'minute': true}" v-model="gooffEndTimerPickerConfig.show"></u-picker>
+		<u-picker @confirm="e=>{timePickerConfirm(e,1)}" mode="time" :title="gotoStartTimerPickerConfig.title" :default-time="gotoStartTimerPickerConfig.value.length?gotoStartTimerPickerConfig.value:gotoStartTimerPickerConfig.default"
+		 :params="{'hour': true,'minute': true}" v-model="gotoStartTimerPickerConfig.show"></u-picker>
+		<u-picker @confirm="e=>{timePickerConfirm(e,2)}" mode="time" :title="gotoEndTimerPickerConfig.title" :default-time="gotoEndTimerPickerConfig.value.length?gotoEndTimerPickerConfig.value:gotoEndTimerPickerConfig.default"
+		 :params="{'hour': true,'minute': true}" v-model="gotoEndTimerPickerConfig.show"></u-picker>
+		<u-picker @confirm="e=>{timePickerConfirm(e,3)}" mode="time" :title="gooffStartTimerPickerConfig.title" :default-time="gooffStartTimerPickerConfig.value.length?gooffStartTimerPickerConfig.value:gooffStartTimerPickerConfig.default"
+		 :params="{'hour': true,'minute': true}" v-model="gooffStartTimerPickerConfig.show"></u-picker>
+		<u-picker @confirm="e=>{timePickerConfirm(e,4)}" mode="time" :title="gooffEndTimerPickerConfig.title" :default-time="gooffEndTimerPickerConfig.value.length?gooffEndTimerPickerConfig.value:gooffEndTimerPickerConfig.default"
+		 :params="{'hour': true,'minute': true}" v-model="gooffEndTimerPickerConfig.show"></u-picker>
+
+		<u-top-tips ref="uTips"></u-top-tips>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
-<script> 
+<script>
+	const openSourceUrl = 'https://github.com/SmileZXLee/uni-dingTalkHelper';
+	const qqGroupUrl = 'https://jq.qq.com/?_wv=1027&k=vU2fKZZH';
 	export default {
 		data() {
 			return {
-				show:true,
+				show: true,
 				timer: null,
-				gotoStartTimerPickerConfig:{
+				gotoStartTimerPickerConfig: {
 					title: '选择【上班】打卡起始时间',
 					show: false,
 					default: '09:00',
 					value: uni.getStorageSync(this.$config.gotoStartTimeStorageKey)
 				},
-				gotoEndTimerPickerConfig:{
+				gotoEndTimerPickerConfig: {
 					title: '选择【上班】打卡结束时间',
 					show: false,
 					default: '09:30',
 					value: uni.getStorageSync(this.$config.gotoEndTimeStorageKey)
 				},
-				gooffStartTimerPickerConfig:{
+				gooffStartTimerPickerConfig: {
 					title: '选择【下班】打卡开始时间',
 					show: false,
 					default: '17:30',
 					value: uni.getStorageSync(this.$config.gooffStartTimeStorageKey)
 				},
-				gooffEndTimerPickerConfig:{
+				gooffEndTimerPickerConfig: {
 					title: '选择【下班】打卡结束时间',
 					show: false,
 					default: '18:00',
@@ -95,33 +114,33 @@
 				gooffTime: ''
 			}
 		},
-		computed:{
-			status(){
+		computed: {
+			status() {
 				// if(!this.$utils.isDingtalkInstalled()){
 				// 	return '请先安装钉钉';
 				// }
-				if(!this.$utils.isApp()){
+				if (!this.$utils.isApp()) {
 					return '请在App中运行';
 				}
 				const time1 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
 				const time2 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
 				const time3 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
 				const time4 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
-				if(!((time1 && time2) || (time3 && time4))){
-					if(!time1){
+				if (!((time1 && time2) || (time3 && time4))) {
+					if (!time1) {
 						return `请${this.gotoStartTimerPickerConfig.title}`;
 					}
-					if(!time2){
+					if (!time2) {
 						return `请${this.gotoEndTimerPickerConfig.title}`;
 					}
-					if(!time3){
+					if (!time3) {
 						return `请${this.gooffStartTimerPickerConfig.title}`;
 					}
-					if(!time4){
+					if (!time4) {
 						return `请${this.gooffEndTimerPickerConfig.title}`;
 					}
 				}
-				if(this.weekDesc === '点击选择'){
+				if (this.weekDesc === '点击选择') {
 					return '请选择星期';
 				}
 				return '已就绪';
@@ -129,147 +148,241 @@
 		},
 		onLoad() {
 			uni.setKeepScreenOn({
-			    keepScreenOn: true
+				keepScreenOn: true
 			});
 			this.updateWeekDesc(false);
-			uni.$on('update-week',()=>{
+			uni.$on('update-week', () => {
 				this.updateWeekDesc(true);
 			})
+			
+			if(uni.getSystemInfoSync().platform === 'ios' && !uni.getStorageSync(this.$config.iosOpenedDingtalkKey)){
+				uni.showModal({
+					title: '请允许首次打开钉钉',
+					content: '为了避免打开钉钉失败，请允许此应用打开钉钉，点击【下一步】后若系统提示是否允许“钉钉打卡助手”打开“钉钉”，请点击允许，若直接跳转钉钉也是正常的。',
+					success: (res) => {
+						if (res.confirm) {
+							this.openDingTalk();
+						}
+					}
+				});
+			}
 		},
 		onShow() {
 			this.updateGotoTime();
 			this.updateGooffTime();
-			console.log(this.$utils.getDateForYYMMDDHHMMSS())
 		},
 		methods: {
-			updateWeekDesc(shouldUpdateTime){
+			updateWeekDesc(shouldUpdateTime) {
 				let weekStorage = uni.getStorageSync(this.$config.weekStorageKey);
 				let selectedWeeksArr = [];
-				if(weekStorage){
+				if (weekStorage) {
 					weekStorage = JSON.parse(weekStorage);
 					let weekDesc = '';
 					let everyday = true;
 					let workday = true;
-					weekStorage.forEach((item,index)=>{
-						if(item.checked){
+					weekStorage.forEach((item, index) => {
+						if (item.checked) {
 							weekDesc += item.title + '、';
-							if(index >= 5){
+							if (index >= 5) {
 								workday = false;
 							}
 							selectedWeeksArr.push(index + 1);
-						}else{
+						} else {
 							everyday = false;
-							if(index < 5){
+							if (index < 5) {
 								workday = false;
 							}
 						}
 					})
-					if(selectedWeeksArr.length){
-						const last = selectedWeeksArr[selectedWeeksArr.length-1];
-						if(last === 7){
+					if (selectedWeeksArr.length) {
+						const last = selectedWeeksArr[selectedWeeksArr.length - 1];
+						if (last === 7) {
 							selectedWeeksArr.pop();
 							selectedWeeksArr.unshift(0);
-							
+
 						}
 					}
 					this.selectedWeeksArr = selectedWeeksArr;
-					if(shouldUpdateTime){
+					if (shouldUpdateTime) {
 						this.updateGotoTime();
 						this.updateGooffTime();
 					}
-					if(everyday){
+					if (everyday) {
 						this.weekDesc = '每天';
 						return;
-					}else if(workday){
+					} else if (workday) {
 						this.weekDesc = '每工作日';
 						return;
-					}else{
-						if(weekDesc.length){
-							this.weekDesc = weekDesc.substring(0,weekDesc.length - 1);
+					} else {
+						if (weekDesc.length) {
+							this.weekDesc = weekDesc.substring(0, weekDesc.length - 1);
 							return;
 						}
 					}
 				}
 				this.weekDesc = '点击选择';
 			},
-			startTimer(){
-				if(this.status === '已就绪' && !this.timer){
-					this.timer = setInterval(()=>{
+			startTimer() {
+				if (this.status === '已就绪' && !this.timer) {
+					this.timer = setInterval(() => {
 						const currentTime = this.$utils.getDateForYYMMDDHHMMSS();
-						if(currentTime === this.gotoTime){
-							this.$utils.openDingTalk((err) => {
-								console.log(err);
-							});
-						}else if(currentTime === this.gooffTime){
-							this.$utils.openDingTalk((err) => {
-								console.log(err);
-							});
+						if (currentTime === this.gotoTime || currentTime === this.gooffTime) {
+							this.openDingtalkAndSave(currentTime);
 						}
-					},1000)
+					}, 1000)
 				}
 			},
-			timePickerConfirm(e,type){
-				if(type === 1){
-					this.gotoStartTimerPickerConfig.value=`${e.hour}:${e.minute}`;
-					uni.setStorageSync(this.$config.gotoStartTimeStorageKey,`${e.hour}:${e.minute}`);
-				}else if(type === 2){
-					this.gotoEndTimerPickerConfig.value=`${e.hour}:${e.minute}`;
-					uni.setStorageSync(this.$config.gotoEndTimeStorageKey,`${e.hour}:${e.minute}`);
-				}else if(type === 3){
-					this.gooffStartTimerPickerConfig.value=`${e.hour}:${e.minute}`;
-					uni.setStorageSync(this.$config.gooffStartTimeStorageKey,`${e.hour}:${e.minute}`);
-				}else if(type === 4){
-					this.gooffEndTimerPickerConfig.value=`${e.hour}:${e.minute}`;
-					uni.setStorageSync(this.$config.gooffEndTimeStorageKey,`${e.hour}:${e.minute}`);
-				}
-				
-				if(type === 1 || type === 2){
-					this.updateGotoTime();
-				}
+			openDingtalkAndSave(currentTime) {
+				const clockData = {
+					time: currentTime,
+					status: false
+				};
+				this.$utils.openDingTalk().then(() => {
+					clockData.status = true;
+					this.$storage.saveClockHistory(clockData);
+					uni.setStorageSync(this.$config.iosOpenedDingtalkKey,true);
+				}).catch((err) => {
+					clockData.status = false;
+					this.$storage.saveClockHistory(clockData);
+				});
 			},
-			getTimePickerConfig(index){
-				const configs = [this.gotoStartTimerPickerConfig,this.gotoEndTimerPickerConfig,this.gooffStartTimerPickerConfig,this.gooffEndTimerPickerConfig];
+			openDingTalk(){
+				this.$utils.openDingTalk().then(() => {
+					uni.setStorageSync(this.$config.iosOpenedDingtalkKey,true);
+					this.$refs.uTips.show({
+						title: '打开钉钉成功',
+						type: 'success',
+						duration: '2000'
+					})
+				}).catch((err) => {
+					this.$refs.uTips.show({
+						title: '打开钉钉失败，请检查是否安装了钉钉',
+						type: 'error',
+						duration: '2000'
+					})
+				});
+			},
+			timePickerConfirm(e, type) {
+				const time = `${e.hour}:${e.minute}`;
+				if (type === 1) {
+					if (this.gotoEndTimerPickerConfig.value && this.$utils.getMinAndSecondDiff(this.gotoEndTimerPickerConfig.value,
+							time) >= 0) {
+						this.$refs.uTips.show({
+							title: `${this.gotoStartTimerPickerConfig.title.replace('选择','')}不得大于${this.gotoEndTimerPickerConfig.title.replace('选择','')}`,
+							type: 'error',
+							duration: '6000'
+						})
+						return;
+					}
+					this.gotoStartTimerPickerConfig.value = time;
+					uni.setStorageSync(this.$config.gotoStartTimeStorageKey, time);
+				} else if (type === 2) {
+					if (this.gotoStartTimerPickerConfig.value && this.$utils.getMinAndSecondDiff(this.gotoStartTimerPickerConfig.value,
+							time) <= 0) {
+						this.$refs.uTips.show({
+							title: `${this.gotoEndTimerPickerConfig.title.replace('选择','')}不得小于${this.gotoStartTimerPickerConfig.title.replace('选择','')}`,
+							type: 'error',
+							duration: '6000'
+						})
+						return;
+					}
+					this.gotoEndTimerPickerConfig.value = time;
+					uni.setStorageSync(this.$config.gotoEndTimeStorageKey, time);
+				} else if (type === 3) {
+					if (this.gooffEndTimerPickerConfig.value && this.$utils.getMinAndSecondDiff(this.gooffEndTimerPickerConfig.value,
+							time) >= 0) {
+						this.$refs.uTips.show({
+							title: `${this.gooffStartTimerPickerConfig.title.replace('选择','')}不得大于${this.gooffEndTimerPickerConfig.title.replace('选择','')}`,
+							type: 'error',
+							duration: '6000'
+						})
+						return;
+					}
+					this.gooffStartTimerPickerConfig.value = time;
+					uni.setStorageSync(this.$config.gooffStartTimeStorageKey, time);
+				} else if (type === 4) {
+					if (this.gooffStartTimerPickerConfig.value && this.$utils.getMinAndSecondDiff(this.gooffStartTimerPickerConfig.value,
+							time) <= 0) {
+						this.$refs.uTips.show({
+							title: `${this.gooffEndTimerPickerConfig.title.replace('选择','')}不得小于${this.gooffStartTimerPickerConfig.title.replace('选择','')}`,
+							type: 'error',
+							duration: '6000'
+						})
+						return;
+					}
+					this.gooffEndTimerPickerConfig.value = time;
+					uni.setStorageSync(this.$config.gooffEndTimeStorageKey, time);
+				}
+				this.updateGotoTime();
+				this.updateGooffTime();
+			},
+			getTimePickerConfig(index) {
+				const configs = [this.gotoStartTimerPickerConfig, this.gotoEndTimerPickerConfig, this.gooffStartTimerPickerConfig,
+					this.gooffEndTimerPickerConfig
+				];
 				return configs[index];
 			},
-			updateGotoTime(){
+			updateGotoTime() {
 				this.gotoTime = this.getGotoTime();
 			},
-			updateGooffTime(){
+			updateGooffTime() {
 				this.gooffTime = this.getGooffTime();
 			},
-			getGotoTime(){
-				if(!this.selectedWeeksArr.length){
+			getGotoTime() {
+				if (!this.selectedWeeksArr.length) {
 					return '请选择星期';
 				}
-				if(!this.gotoStartTimerPickerConfig.value || !this.gotoEndTimerPickerConfig.value){
+				if (!this.gotoStartTimerPickerConfig.value || !this.gotoEndTimerPickerConfig.value) {
 					return '在选定区域内随机';
 				}
 				this.startTimer();
-				return this.$utils.getNextClockFullTime(this.gotoStartTimerPickerConfig.value,this.gotoEndTimerPickerConfig.value,this.selectedWeeksArr);
+				return this.$utils.getNextClockFullTime(this.gotoStartTimerPickerConfig.value, this.gotoEndTimerPickerConfig.value,
+					this.selectedWeeksArr);
 			},
-			getGooffTime(){
-				if(!this.selectedWeeksArr.length){
+			getGooffTime() {
+				if (!this.selectedWeeksArr.length) {
 					return '请选择星期';
 				}
-				if(!this.gooffStartTimerPickerConfig.value || !this.gooffEndTimerPickerConfig.value){
+				if (!this.gooffStartTimerPickerConfig.value || !this.gooffEndTimerPickerConfig.value) {
 					return '在选定区域内随机';
 				}
 				this.startTimer();
-				return this.$utils.getNextClockFullTime(this.gooffStartTimerPickerConfig.value,this.gooffEndTimerPickerConfig.value,this.selectedWeeksArr);
+				return this.$utils.getNextClockFullTime(this.gooffStartTimerPickerConfig.value, this.gooffEndTimerPickerConfig.value,
+					this.selectedWeeksArr);
 			},
 			openDingtalkClick() {
 				uni.showModal({
-				    title: '防误触提示',
-				    content: '请再次确定您要打开钉钉吗？',
-				    success: (res) => {
-				        if (res.confirm) {
-				            this.$utils.openDingTalk((err) => {
-				            	console.log(err);
-				            });
-				        }
-				    }
+					title: '防误触提示',
+					content: '请再次确定您要打开钉钉吗？',
+					success: (res) => {
+						if (res.confirm) {
+							this.openDingTalk();
+						}
+					}
 				});
 
+			},
+			copyOpenSourceUrl() {
+				uni.setClipboardData({
+					data: openSourceUrl
+				})
+			},
+			openQQGroup() {
+				//#ifdef H5
+				window.location.href = qqGroupUrl;
+				//#endif
+				//#ifndef APP-PLUS
+				return;
+				//#endif
+				//#ifdef APP-PLUS
+				plus.runtime.openURL(qqGroupUrl, () => {
+					this.$refs.uTips.show({
+						title: '链接打开失败',
+						type: 'error',
+						duration: '2000'
+					})
+				}, 'com.tencent.mobileqq');
+				//#endif
 			}
 		}
 	}
@@ -281,13 +394,16 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		.list-item-subtitle{
+
+		.list-item-subtitle {
 			font-size: 26rpx;
 		}
-		.status-enable{
+
+		.status-enable {
 			color: $uni-color-success;
 		}
-		.status-disable{
+
+		.status-disable {
 			color: $uni-color-error;
 		}
 	}

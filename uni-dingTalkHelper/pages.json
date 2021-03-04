@@ -5,17 +5,31 @@
 			"style": {
 				"navigationBarTitleText": "钉钉打卡助手"
 			}
+		}, {
+			"path": "pages/week-select/week-select",
+			"style": {
+				"navigationBarTitleText": "星期",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/clock-history/clock-history",
+			"style": {
+				"navigationBarTitleText": "钉钉定时打卡记录",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"text": "清空  ",
+							"fontSize": "15",
+							 "width" : "auto"
+						}]
+					}
+				}
+			}
+
 		}
-	    ,{
-            "path" : "pages/week-select/week-select",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "星期",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "钉钉打卡助手",
