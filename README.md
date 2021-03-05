@@ -1,5 +1,5 @@
 # uni-dingTalkHelper
- 钉钉打卡助手uni-app版，支持iOS安卓，iOS无需签名
+ 钉钉打卡助手uni-app版，支持iOS和安卓，无需签名
  
  ### 反馈&交流qq群：[790460711](https://jq.qq.com/?_wv=1027&k=vU2fKZZH)
 
