@@ -6,6 +6,7 @@
 		<view
 			:class="{ 'uni-list-item--disabled': disabled }"
 			:hover-class="(!clickable && !link) || disabled || showSwitch ? '' : 'uni-list-item--hover'"
+			:hover-stay-time="100"
 			class="uni-list-item"
 			@click.stop="onClick"
 		>

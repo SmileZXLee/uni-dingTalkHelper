@@ -6,7 +6,7 @@ function openDingTalk(errback) {
 	return new Promise(function(resolve, reject) {
 		if (!isApp()) {
 			reject('请在App中运行！');
-		}else{
+		} else {
 			if (plus.os.name === 'Android') {
 				plus.runtime.launchApplication({
 					pname: config.dingTalkPname
@@ -82,15 +82,16 @@ function getCurrentDateForYYMMDD() {
 }
 
 function getDateForYYMMDD(date) {
-	return `${date.getFullYear()}-${fillZero2Two(date.getMonth() + 1)}-${fillZero2Two(date.getDate())}`;
+	return `${date.getFullYear()}-${fillZero2Two(date.getMonth() + 1)}-${fillZero2Two(date.getDate())}(${getWeekWithIndex(date.getDay())})`;
 }
 
 function getDateForYYMMDDHHMMSS() {
 	const date = getCurrentDate();
-	return `${date.getFullYear()}-${fillZero2Two(date.getMonth() + 1)}-${fillZero2Two(date.getDate())} ${fillZero2Two(date.getHours())}:${fillZero2Two(date.getMinutes())}:${fillZero2Two(date.getSeconds())}`;
+	return `${date.getFullYear()}-${fillZero2Two(date.getMonth() + 1)}-${fillZero2Two(date.getDate())}(${getWeekWithIndex(date.getDay())}) ${fillZero2Two(date.getHours())}:${fillZero2Two(date.getMinutes())}:${fillZero2Two(date.getSeconds())}`;
 }
 
 function getDiffTimeToCurrentTime(dateStr) {
+	dateStr = getTimeWithoutWeek(dateStr);
 	dateStr = dateStr.replace(/-/, "/").replace(/-/, "/");
 	var date1 = getCurrentDate();
 	var date2 = new Date(dateStr);
@@ -98,7 +99,7 @@ function getDiffTimeToCurrentTime(dateStr) {
 	return disTime;
 }
 
-function getMinAndSecondDiff(startMin, endMin){
+function getMinAndSecondDiff(startMin, endMin) {
 	const startMinArr = startMin.split(':');
 	const startTotalMin = startMinArr.length === 2 ? (parseInt(startMinArr[0]) * 60 + parseInt(startMinArr[1])) : 0;
 	const endMinArr = endMin.split(':');
@@ -125,6 +126,16 @@ function getCurrentDateFullRandomMin(startMin, endMin) {
 function getRandom(start, end) {
 	let random = Math.random()
 	return parseInt((start + (end - start) * random))
+}
+
+function getWeekWithIndex(index) {
+	const weekArr = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+	return weekArr[index];
+}
+
+function getTimeWithoutWeek(time) {
+	var regExp = /\(.*?\)/g;
+	return time.replace(regExp, '');
 }
 
 function fillZero2Two(value) {

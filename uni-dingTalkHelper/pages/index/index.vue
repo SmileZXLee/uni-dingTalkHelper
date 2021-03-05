@@ -1,6 +1,10 @@
 <!-- github地址:https://github.com/SmileZXLee/uni-dingTalkHelper -->
 <template>
 	<view class="content">
+		<view class="time-view" v-if="currentTime.length" style="z-index: 100;position: sticky;top: 0px;">
+			<u-icon name="clock"></u-icon>
+			<view class="time-view-text">运行中，当前时间：{{currentTime}}</view>
+		</view>
 		<uni-list style="width: 100%;">
 			<uni-section title="状态"></uni-section>
 			<uni-list-item title="就绪状态">
@@ -53,6 +57,8 @@
 			</uni-list-item>
 			<uni-section title="其他"></uni-section>
 			<uni-list-item title="自动打卡记录" to="/pages/clock-history/clock-history" showArrow="true">
+			</uni-list-item>
+			<uni-list-item title="使用说明(必看)" to="/pages/instruction/instruction" showArrow="true">
 			</uni-list-item>
 			<uni-list-item title="开源地址" clickable @click="copyOpenSourceUrl">
 				<template slot="footer">
@@ -111,7 +117,8 @@
 				weekDesc: '',
 				selectedWeeksArr: [],
 				gotoTime: '',
-				gooffTime: ''
+				gooffTime: '',
+				currentTime: ''
 			}
 		},
 		computed: {
@@ -122,10 +129,10 @@
 				if (!this.$utils.isApp()) {
 					return '请在App中运行';
 				}
-				const time1 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
-				const time2 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
-				const time3 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
-				const time4 = uni.getStorageSync(this.$config.gotoStartTimeStorageKey);
+				const time1 = this.gotoStartTimerPickerConfig.value;
+				const time2 = this.gotoEndTimerPickerConfig.value;;
+				const time3 = this.gooffStartTimerPickerConfig.value;;
+				const time4 = this.gooffEndTimerPickerConfig.value;;
 				if (!((time1 && time2) || (time3 && time4))) {
 					if (!time1) {
 						return `请${this.gotoStartTimerPickerConfig.title}`;
@@ -154,8 +161,8 @@
 			uni.$on('update-week', () => {
 				this.updateWeekDesc(true);
 			})
-			
-			if(uni.getSystemInfoSync().platform === 'ios' && !uni.getStorageSync(this.$config.iosOpenedDingtalkKey)){
+
+			if (!uni.getStorageSync(this.$config.iosOpenedDingtalkKey)) {
 				uni.showModal({
 					title: '请允许首次打开钉钉',
 					content: '为了避免打开钉钉失败，请允许此应用打开钉钉，点击【下一步】后若系统提示是否允许“钉钉打卡助手”打开“钉钉”，请点击允许，若直接跳转钉钉也是正常的。',
@@ -224,13 +231,16 @@
 			},
 			startTimer() {
 				if (this.status === '已就绪' && !this.timer) {
-					this.timer = setInterval(() => {
-						const currentTime = this.$utils.getDateForYYMMDDHHMMSS();
-						if (currentTime === this.gotoTime || currentTime === this.gooffTime) {
-							this.openDingtalkAndSave(currentTime);
-						}
-					}, 1000)
+					this.timerRun();
+					this.timer = setInterval(this.timerRun, 1000)
 				}
+			},
+			timerRun() {
+				const currentTime = this.$utils.getDateForYYMMDDHHMMSS();
+				if (currentTime === this.gotoTime || currentTime === this.gooffTime) {
+					this.openDingtalkAndSave(currentTime);
+				}
+				this.currentTime = currentTime;
 			},
 			openDingtalkAndSave(currentTime) {
 				const clockData = {
@@ -240,15 +250,15 @@
 				this.$utils.openDingTalk().then(() => {
 					clockData.status = true;
 					this.$storage.saveClockHistory(clockData);
-					uni.setStorageSync(this.$config.iosOpenedDingtalkKey,true);
+					uni.setStorageSync(this.$config.iosOpenedDingtalkKey, true);
 				}).catch((err) => {
 					clockData.status = false;
 					this.$storage.saveClockHistory(clockData);
 				});
 			},
-			openDingTalk(){
+			openDingTalk() {
 				this.$utils.openDingTalk().then(() => {
-					uni.setStorageSync(this.$config.iosOpenedDingtalkKey,true);
+					uni.setStorageSync(this.$config.iosOpenedDingtalkKey, true);
 					this.$refs.uTips.show({
 						title: '打开钉钉成功',
 						type: 'success',
@@ -270,7 +280,7 @@
 						this.$refs.uTips.show({
 							title: `${this.gotoStartTimerPickerConfig.title.replace('选择','')}不得大于${this.gotoEndTimerPickerConfig.title.replace('选择','')}`,
 							type: 'error',
-							duration: '6000'
+							duration: '4000'
 						})
 						return;
 					}
@@ -282,7 +292,7 @@
 						this.$refs.uTips.show({
 							title: `${this.gotoEndTimerPickerConfig.title.replace('选择','')}不得小于${this.gotoStartTimerPickerConfig.title.replace('选择','')}`,
 							type: 'error',
-							duration: '6000'
+							duration: '4000'
 						})
 						return;
 					}
@@ -381,7 +391,7 @@
 						type: 'error',
 						duration: '2000'
 					})
-				}, 'com.tencent.mobileqq');
+				});
 				//#endif
 			}
 		}
@@ -394,6 +404,21 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+
+		.time-view {
+			.time-view-text {
+				font-size: 25rpx;
+				margin-left: 5rpx;
+			}
+
+			width: 100%;
+			height: 70rpx;
+			background-color: $uni-color-success;
+			color: white;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
 		.list-item-subtitle {
 			font-size: 26rpx;

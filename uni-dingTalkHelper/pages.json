@@ -22,10 +22,17 @@
 						"buttons": [{
 							"text": "清空  ",
 							"fontSize": "15",
-							 "width" : "auto"
+							"width": "auto"
 						}]
 					}
 				}
+			}
+
+		}, {
+			"path": "pages/instruction/instruction",
+			"style": {
+				"navigationBarTitleText": "使用说明",
+				"enablePullDownRefresh": false
 			}
 
 		}
@@ -33,8 +40,9 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "钉钉打卡助手",
-		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#FFFFFF"
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"animationDuration": 100
 	},
 	"easycom": {
 		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"

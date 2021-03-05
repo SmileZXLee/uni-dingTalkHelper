@@ -1,13 +1,16 @@
 <template>
 	<view class="content">
-		<uni-list style="width: 100%;" v-if="list.length">
-			<uni-list-item :title="item.time" v-for="(item,index) in list" :key="index">
-				<template slot="footer">
-					<view :class="item.status?'status-view status-view-success':'status-view status-view-error'">{{item.status?'成功':'失败'}}</view>
-				</template>
-			</uni-list-item>
-		</uni-list>
-		<u-empty v-else text="无打卡记录" mode="history" icon-size="120"></u-empty>
+		<z-paging ref="paging" @query="updateList" :list.sync="list" :to-bottom-loading-more-enabled="false"
+		 :use-custom-refresher="true" style="height: 100%;">
+			<empty-view slot="empty"></empty-view>
+			<uni-list style="width: 100%;" v-if="list.length">
+				<uni-list-item :title="item.time" v-for="(item,index) in list" :key="index">
+					<template slot="footer">
+						<view :class="item.status?'status-view status-view-success':'status-view status-view-error'">{{item.status?'成功':'失败'}}</view>
+					</template>
+				</uni-list-item>
+			</uni-list>
+		</z-paging>
 		<u-top-tips ref="uTips"></u-top-tips>
 	</view>
 </template>
@@ -19,8 +22,12 @@
 				list: []
 			};
 		},
-		onLoad() {
-			this.list = this.$storage.getClockHistory();
+		methods: {
+			updateList() {
+				setTimeout(() => {
+					this.$refs.paging.addData(this.$storage.getClockHistory());
+				}, 100)
+			}
 		},
 		onNavigationBarButtonTap() {
 			if (!this.list.length) {
@@ -37,7 +44,7 @@
 				success: (res) => {
 					if (res.confirm) {
 						this.$storage.cleanClockHistory();
-						this.list = this.$storage.getClockHistory();
+						this.$refs.paging.reload();
 						this.$refs.uTips.show({
 							title: '清除成功',
 							type: 'success',

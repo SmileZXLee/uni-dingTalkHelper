@@ -7,13 +7,14 @@ function saveClockHistory(obj) {
 		dataArr = JSON.parse(dataJson);
 	}
 	dataArr.push(obj);
+	console.log('dataArr',dataArr);
 	uni.setStorageSync(config.clockHistoryStorageKey, JSON.stringify(dataArr));
 }
 
 function getClockHistory() {
 	const dataJson = uni.getStorageSync(config.clockHistoryStorageKey);
 	if (dataJson) {
-		return JSON.parse(dataJson);
+		return JSON.parse(dataJson).reverse();
 	}
 	return [];
 }
