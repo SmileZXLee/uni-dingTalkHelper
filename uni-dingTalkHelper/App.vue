@@ -5,6 +5,7 @@
 		},
 		onShow: function() {
 			console.log('App Show')
+			uni.$emit('appshow');
 		},
 		onHide: function() {
 			console.log('App Hide')

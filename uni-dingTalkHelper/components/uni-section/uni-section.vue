@@ -58,6 +58,7 @@
 </script>
 <style lang="scss" scoped>
 	.uni-section {
+		font-weight: bold;
 		position: relative;
 		/* #ifndef APP-NVUE */
 		display: flex;

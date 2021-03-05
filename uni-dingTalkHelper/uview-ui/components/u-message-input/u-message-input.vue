@@ -162,6 +162,10 @@
 			}
 		},
 		methods: {
+			reset(){
+				this.valueModel = '';
+				this.$emit('change', this.valueModel);
+			},
 			getVal(e) {
 				let {
 					value

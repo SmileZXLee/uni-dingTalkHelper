@@ -1,7 +1,10 @@
 <!-- github地址:https://github.com/SmileZXLee/uni-dingTalkHelper -->
 <template>
-	<view class="content">
-		<view class="time-view" v-if="currentTime.length" style="z-index: 100;position: sticky;top: 0px;">
+	<view class="content" v-if="showContent">
+		<u-navbar :is-back="false" title-color="#ffffff" :background="{background: '#007aff'}" title="钉钉打卡助手">
+			<u-icon name="lock" slot="right" style="margin-right: 20rpx;font-size: 36rpx;color: white;" @click="checkShouldShowSecurity(true)"></u-icon>
+		</u-navbar>
+		<view class="time-view" v-if="currentTime.length" :style="{top: `${navbarHeight}px`}">
 			<u-icon name="clock"></u-icon>
 			<view class="time-view-text">运行中，当前时间：{{currentTime}}</view>
 		</view>
@@ -58,6 +61,11 @@
 			<uni-section title="其他"></uni-section>
 			<uni-list-item title="自动打卡记录" to="/pages/clock-history/clock-history" showArrow="true">
 			</uni-list-item>
+			<uni-list-item title="密码保护" clickable @click="securityClick">
+				<template slot="footer">
+					<view class="list-item-subtitle">{{pwdStatus===0?'未开启':'已开启'}}</view>
+				</template>
+			</uni-list-item>
 			<uni-list-item title="使用说明(必看)" to="/pages/instruction/instruction" showArrow="true">
 			</uni-list-item>
 			<uni-list-item title="开源地址" clickable @click="copyOpenSourceUrl">
@@ -77,12 +85,14 @@
 		<u-picker @confirm="e=>{timePickerConfirm(e,4)}" mode="time" :title="gooffEndTimerPickerConfig.title" :default-time="gooffEndTimerPickerConfig.value.length?gooffEndTimerPickerConfig.value:gooffEndTimerPickerConfig.default"
 		 :params="{'hour': true,'minute': true}" v-model="gooffEndTimerPickerConfig.show"></u-picker>
 
-		<u-top-tips ref="uTips"></u-top-tips>
+		<u-top-tips ref="uTips" :navbarHeight="navbarHeight"></u-top-tips>
 		<u-toast ref="uToast" />
 	</view>
+	<empty-view v-else></empty-view>
 </template>
 
 <script>
+	let systemInfo = uni.getSystemInfoSync();
 	const openSourceUrl = 'https://github.com/SmileZXLee/uni-dingTalkHelper';
 	const qqGroupUrl = 'https://jq.qq.com/?_wv=1027&k=vU2fKZZH';
 	export default {
@@ -118,7 +128,9 @@
 				selectedWeeksArr: [],
 				gotoTime: '',
 				gooffTime: '',
-				currentTime: ''
+				currentTime: '',
+				pwdStatus: 0,
+				showContent: false
 			}
 		},
 		computed: {
@@ -151,17 +163,35 @@
 					return '请选择星期';
 				}
 				return '已就绪';
+			},
+			navbarHeight() {
+				// #ifdef APP-PLUS || H5
+				return 44 + systemInfo.statusBarHeight;
+				// #endif
+				// #ifdef MP
+				let height = systemInfo.platform == 'ios' ? 44 : 48;
+				return height + systemInfo.statusBarHeight;
+				// #endif
 			}
 		},
 		onLoad() {
+			// #ifdef APP-PLUS
 			uni.setKeepScreenOn({
 				keepScreenOn: true
 			});
+			// #endif
 			this.updateWeekDesc(false);
 			uni.$on('update-week', () => {
 				this.updateWeekDesc(true);
 			})
-
+			this.pwdStatus = this.$storage.getSecurityPwd().length === 0 ? 0 : 1;
+			if(this.pwdStatus === 0){
+				this.showContent = true;
+			}
+			this.checkShouldShowSecurity();
+			uni.$on('appshow', () => {
+				this.checkShouldShowSecurity();
+			})
 			if (!uni.getStorageSync(this.$config.iosOpenedDingtalkKey)) {
 				uni.showModal({
 					title: '请允许首次打开钉钉',
@@ -177,6 +207,7 @@
 		onShow() {
 			this.updateGotoTime();
 			this.updateGooffTime();
+			this.pwdStatus = this.$storage.getSecurityPwd().length === 0 ? 0 : 1;
 		},
 		methods: {
 			updateWeekDesc(shouldUpdateTime) {
@@ -393,6 +424,47 @@
 					})
 				});
 				//#endif
+			},
+			securityClick() {
+				if (this.pwdStatus === 0) {
+					//开启密码保护
+					uni.navigateTo({
+						url: '../security/security?type=0'
+					})
+				} else {
+					//关闭密码保护
+					uni.navigateTo({
+						url: '../security/security?type=2'
+					})
+				}
+
+			},
+			checkShouldShowSecurity(showTipWhenErr=false) {
+				if (this.pwdStatus === 1) {
+					let pages = getCurrentPages();
+					let route = pages[pages.length - 1].route;
+					if (route.indexOf('security') === -1) {
+						this.showSecurity();
+					}
+				} else {
+					if(showTipWhenErr){
+						this.$refs.uTips.show({
+							title: '请先开启密码保护',
+							type: 'error',
+							duration: '2000'
+						})
+					}
+				}
+			},
+			showSecurity() {
+				uni.navigateTo({
+					url: '../security/security?type=1',
+					animationType: 'slide-in-bottom',
+					animationDuration: 200
+				})
+				setTimeout(()=>{
+					this.showContent = true;
+				},500)
 			}
 		}
 	}
@@ -406,6 +478,8 @@
 		justify-content: center;
 
 		.time-view {
+			z-index: 100;
+			position: sticky;
 			.time-view-text {
 				font-size: 25rpx;
 				margin-left: 5rpx;

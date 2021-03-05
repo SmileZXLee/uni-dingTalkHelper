@@ -7,6 +7,7 @@ const gooffStartTimeStorageKey = "gooffStartTimeStorageKey";
 const gooffEndTimeStorageKey = "gooffEndTimeStorageKey";
 const clockHistoryStorageKey = "clockHistoryStorageKey";
 const iosOpenedDingtalkKey = "iosOpenedDingtalkKey";
+const securityPwdKey = "securityPwdKey";
 module.exports = {
 	dingTalkScheme: dingTalkScheme,
 	dingTalkPname: dingTalkPname,
@@ -16,5 +17,6 @@ module.exports = {
 	gooffStartTimeStorageKey: gooffStartTimeStorageKey,
 	gooffEndTimeStorageKey: gooffEndTimeStorageKey,
 	clockHistoryStorageKey: clockHistoryStorageKey,
-	iosOpenedDingtalkKey: iosOpenedDingtalkKey
+	iosOpenedDingtalkKey: iosOpenedDingtalkKey,
+	securityPwdKey: securityPwdKey
 }
