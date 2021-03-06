@@ -2,8 +2,8 @@
     "name" : "钉钉打卡助手",
     "appid" : "__UNI__EBAF4AA",
     "description" : "",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
+    "versionName" : "1.0.1",
+    "versionCode" : 101,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -16,8 +16,12 @@
             "autoclose" : true,
             "delay" : 0
         },
+        "screenOrientation" : [ "portrait-primary" ],
         /* 模块配置 */
-        "modules" : {},
+        "modules" : {
+            "FaceID" : {},
+            "Fingerprint" : {}
+        },
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -32,6 +36,7 @@
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.USE_FINGERPRINT\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
@@ -47,7 +52,8 @@
             },
             /* ios打包配置 */
             "ios" : {
-                "urlschemewhitelist" : [ "dingtalk" ]
+                "urlschemewhitelist" : [ "dingtalk" ],
+                "UIBackgroundModes" : "audio"
             },
             /* SDK配置 */
             "sdkConfigs" : {

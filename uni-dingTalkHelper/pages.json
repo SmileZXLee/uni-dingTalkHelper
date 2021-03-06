@@ -52,7 +52,7 @@
 		"navigationBarTitleText": "钉钉打卡助手",
 		"navigationBarBackgroundColor": "#007aff",
 		"backgroundColor": "#F8F8F8",
-		"animationDuration": 200
+		"animationDuration": 400
 	},
 	"easycom": {
 		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"

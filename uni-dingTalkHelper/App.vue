@@ -9,6 +9,7 @@
 		},
 		onHide: function() {
 			console.log('App Hide')
+			uni.$emit('apphide');
 		}
 	}
 </script>

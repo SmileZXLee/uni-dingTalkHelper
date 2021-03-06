@@ -1,8 +1,21 @@
 <!-- github地址:https://github.com/SmileZXLee/uni-dingTalkHelper -->
 <template>
 	<view class="content" v-if="showContent">
-		<u-navbar :is-back="false" title-color="#ffffff" :background="{background: '#007aff'}" title="钉钉打卡助手">
-			<u-icon name="lock" slot="right" style="margin-right: 20rpx;font-size: 36rpx;color: white;" @click="checkShouldShowSecurity(true)"></u-icon>
+		<u-navbar :is-back="false" title-color="#ffffff" :background="{background: '#007aff'}" title="">
+			<view class="nav-main">
+				<view class="nav-left" style="margin-left: 20rpx;font-size: 22rpx;margin-bottom: -10rpx;">
+					<!--  #ifdef APP-PLUS -->
+					<view>
+						<text>V</text> <text style="font-size: 30rpx;margin-left: 5rpx;">{{version}}</text>
+					</view>
+					<!--  #endif -->
+				</view>
+				<view class="nav-title">钉钉打卡助手</view>
+				<view class="nav-right" style="margin-bottom: -10rpx;">
+					<u-icon name="lock" style="margin-right: 20rpx;font-size: 36rpx;color: white;" @click="checkShouldShowSecurity(true)"></u-icon>
+				</view>
+			</view>
+			<!-- <u-icon name="lock" slot="right" style="margin-right: 20rpx;font-size: 36rpx;color: white;" @click="checkShouldShowSecurity(true)"></u-icon> -->
 		</u-navbar>
 		<view class="time-view" v-if="currentTime.length" :style="{top: `${navbarHeight}px`}">
 			<u-icon name="clock"></u-icon>
@@ -88,7 +101,7 @@
 		<u-top-tips ref="uTips" :navbarHeight="navbarHeight"></u-top-tips>
 		<u-toast ref="uToast" />
 	</view>
-	<empty-view v-else></empty-view>
+	<empty-view v-else emptyText="需授权后访问"></empty-view>
 </template>
 
 <script>
@@ -130,7 +143,8 @@
 				gooffTime: '',
 				currentTime: '',
 				pwdStatus: 0,
-				showContent: false
+				showContent: false,
+				version: ''
 			}
 		},
 		computed: {
@@ -179,13 +193,15 @@
 			uni.setKeepScreenOn({
 				keepScreenOn: true
 			});
+			this.version = plus.runtime.version;
+			console.log(this.version);
 			// #endif
 			this.updateWeekDesc(false);
 			uni.$on('update-week', () => {
 				this.updateWeekDesc(true);
 			})
 			this.pwdStatus = this.$storage.getSecurityPwd().length === 0 ? 0 : 1;
-			if(this.pwdStatus === 0){
+			if (this.pwdStatus === 0) {
 				this.showContent = true;
 			}
 			this.checkShouldShowSecurity();
@@ -439,15 +455,15 @@
 				}
 
 			},
-			checkShouldShowSecurity(showTipWhenErr=false) {
+			checkShouldShowSecurity(showTipWhenErr = false) {
 				if (this.pwdStatus === 1) {
 					let pages = getCurrentPages();
 					let route = pages[pages.length - 1].route;
 					if (route.indexOf('security') === -1) {
-						this.showSecurity();
+						this.showSecurity(!showTipWhenErr);
 					}
 				} else {
-					if(showTipWhenErr){
+					if (showTipWhenErr) {
 						this.$refs.uTips.show({
 							title: '请先开启密码保护',
 							type: 'error',
@@ -456,15 +472,15 @@
 					}
 				}
 			},
-			showSecurity() {
+			showSecurity(autoAuthentication = true) {
 				uni.navigateTo({
-					url: '../security/security?type=1',
+					url: '../security/security?type=1&autoAuthentication=' + autoAuthentication,
 					animationType: 'slide-in-bottom',
 					animationDuration: 200
 				})
-				setTimeout(()=>{
+				setTimeout(() => {
 					this.showContent = true;
-				},500)
+				}, 500)
 			}
 		}
 	}
@@ -476,10 +492,25 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-
+		.nav-main{
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			color: white;
+			.nav-left,.nav-right{
+				width: 200rpx;
+			}
+			.nav-right{
+				display: flex;
+				justify-content: flex-end;
+			}
+		}
 		.time-view {
 			z-index: 100;
 			position: sticky;
+
 			.time-view-text {
 				font-size: 25rpx;
 				margin-left: 5rpx;
