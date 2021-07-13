@@ -17,8 +17,12 @@
  ### ④点击顶部：运行->运行到手机或模拟器->选择自己的手机。
  ### ⑤若提示预编译错误：代码使用了scss/sass语言，但未安装响应的编译器插件...，需要点击顶部工具->插件安装->安装新插件->前往插件市场安装->搜索sass并点击第一项->点击右侧【使用HbuilderX导入插件】(需要注册DCloud账号)。
  ### ⑥运行成功后，手机上会有一个Hbuilder的App，打开这个App即可。注意：iPhone首次打开时会提示“未受信任的企业级开发者XXX”，打开手机设置->通用->描述文件与设备管理->Digtal Heaven(Beijing) Internet & Te...，点击信任即可。
- 
+
  ### 点击此处直接安装安卓版：https://www.pgyer.com/dingTalkHelper
+ 
+ ***
+ # 若HbuilderX无法找到手机，请参阅文档：[https://ask.dcloud.net.cn/article/97](https://ask.dcloud.net.cn/article/97)
+ ***
  
  ## 注意
 * 此应用【钉钉定时打卡助手】仅限用于定时打开钉钉，非定位修改软件，需要把手机放在公司。
