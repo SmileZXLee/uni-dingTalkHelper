@@ -1,5 +1,5 @@
 # uni-dingTalkHelper
- 钉钉打卡助手uni-app版，支持iOS和安卓，无需签名
+ 钉钉打卡助手uni-app版，支持iOS和安卓
  
  ### 反馈&交流qq群：[790460711](https://jq.qq.com/?_wv=1027&k=vU2fKZZH)
 
@@ -16,7 +16,7 @@
  ### ③打开项目，选中任一`.vue`结尾的文件，如`App.vue`，将手机连接至电脑，iPhone需要允许电脑访问，安卓需要开启USB调试。
  ### ④点击顶部：运行->运行到手机或模拟器->选择自己的手机。
  ### ⑤若提示预编译错误：代码使用了scss/sass语言，但未安装响应的编译器插件...，需要点击顶部工具->插件安装->安装新插件->前往插件市场安装->搜索sass并点击第一项->点击右侧【使用HbuilderX导入插件】(需要注册DCloud账号)。
- ### ⑥运行成功后，手机上会有一个Hbuilder的App，打开这个App即可。注意：iPhone首次打开时会提示“未受信任的企业级开发者XXX”，打开手机设置->通用->描述文件与设备管理->Digtal Heaven(Beijing) Internet & Te...，点击信任即可。
+ ### ⑥运行成功后，手机上会有一个Hbuilder的App，打开这个App即可。注意：iPhone首次打开时会提示“未受信任的企业级开发者XXX”，打开手机设置->通用->描述文件与设备管理->Digtal Heaven(Beijing) Internet & Te...，点击信任即可。（ps：iOS现已不支持，需要签名，必须有证书才可以）
 
  ### 点击此处直接安装安卓版：https://www.pgyer.com/dingTalkHelper
  
