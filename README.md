@@ -11,7 +11,7 @@
 - [x] 密码保护，隐私无忧
  
  ## 运行&安装
- ### ①下载HbuilderX：https://www.dcloud.io/hbuilderx.html， 注意要选择App开发版。
+ ### ①下载HbuilderX：[https://www.dcloud.io/hbuilderx.html](https://www.dcloud.io/hbuilderx.html)，注意要选择App开发版。
  ### ②下载此项目代码，将与README.MD同级的`uni-dingTalkHelper`拖入HbuilderX中。
  ### ③打开项目，选中任一`.vue`结尾的文件，如`App.vue`，将手机连接至电脑，iPhone需要允许电脑访问，安卓需要开启USB调试。
  ### ④点击顶部：运行->运行到手机或模拟器->选择自己的手机。
