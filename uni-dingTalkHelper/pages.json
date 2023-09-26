@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "钉钉打卡助手",
+				"navigationBarTitleText": "钉钉打开测试工具",
 				"navigationStyle": "custom"
 			}
 		}, {
@@ -16,7 +16,7 @@
 		}, {
 			"path": "pages/clock-history/clock-history",
 			"style": {
-				"navigationBarTitleText": "钉钉定时打卡记录",
+				"navigationBarTitleText": "操作记录",
 				"enablePullDownRefresh": false,
 				"app-plus": {
 					"titleNView": {
@@ -49,7 +49,7 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "钉钉打卡助手",
+		"navigationBarTitleText": "钉钉打开测试工具",
 		"navigationBarBackgroundColor": "#007aff",
 		"backgroundColor": "#F8F8F8",
 		"animationDuration": 400

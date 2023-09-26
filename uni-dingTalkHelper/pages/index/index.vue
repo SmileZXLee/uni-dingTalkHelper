@@ -10,7 +10,7 @@
 					</view>
 					<!--  #endif -->
 				</view>
-				<view class="nav-title">钉钉打卡助手</view>
+				<view class="nav-title">钉钉打开测试工具</view>
 				<view class="nav-right" style="margin-bottom: -10rpx;">
 					<u-icon name="lock" style="margin-right: 20rpx;font-size: 36rpx;color: white;" @click="checkShouldShowSecurity(true)"></u-icon>
 				</view>
@@ -28,40 +28,40 @@
 					<view :class="status==='已就绪'?'list-item-subtitle status-enable':'list-item-subtitle status-disable'">{{status}}</view>
 				</template>
 			</uni-list-item>
-			<uni-section title="【上班】自动打卡时间"></uni-section>
-			<uni-list-item title="【上班】打卡起始时间" clickable @click="gotoStartTimerPickerConfig.show=true">
+			<uni-section title="钉钉打开测试1"></uni-section>
+			<uni-list-item title="钉钉打开测试1起始时间" clickable @click="gotoStartTimerPickerConfig.show=true">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{gotoStartTimerPickerConfig.value.length?gotoStartTimerPickerConfig.value:'点击设置'}}</view>
 				</template>
 			</uni-list-item>
 
-			<uni-list-item title="【上班】打卡结束时间" clickable @click="gotoEndTimerPickerConfig.show=true">
+			<uni-list-item title="钉钉打开测试1结束时间" clickable @click="gotoEndTimerPickerConfig.show=true">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{gotoEndTimerPickerConfig.value.length?gotoEndTimerPickerConfig.value:'点击设置'}}</view>
 				</template>
 			</uni-list-item>
-			<uni-list-item title="【上班】下次打卡时间" clickable @click="updateGotoTime">
+			<uni-list-item title="钉钉打开测试1下次打开时间" clickable @click="updateGotoTime">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{gotoTime}}</view>
 				</template>
 			</uni-list-item>
-			<uni-section title="【下班】自动打卡时间"></uni-section>
-			<uni-list-item title="【下班】打卡起始时间" clickable @click="gooffStartTimerPickerConfig.show=true">
+			<uni-section title="钉钉打开测试2"></uni-section>
+			<uni-list-item title="钉钉打开测试2起始时间" clickable @click="gooffStartTimerPickerConfig.show=true">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{gooffStartTimerPickerConfig.value.length?gooffStartTimerPickerConfig.value:'点击设置'}}</view>
 				</template>
 			</uni-list-item>
-			<uni-list-item title="【下班】打卡结束时间" clickable @click="gooffEndTimerPickerConfig.show=true">
+			<uni-list-item title="钉钉打开测试2结束时间" clickable @click="gooffEndTimerPickerConfig.show=true">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{gooffEndTimerPickerConfig.value.length?gooffEndTimerPickerConfig.value:'点击设置'}}</view>
 				</template>
 			</uni-list-item>
-			<uni-list-item title="【下班】下次打卡时间" clickable @click="updateGooffTime">
+			<uni-list-item title="钉钉打开测试2下次打开时间" clickable @click="updateGooffTime">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{gooffTime}}</view>
 				</template>
 			</uni-list-item>
-			<uni-section title="打卡星期"></uni-section>
+			<uni-section title="重复星期"></uni-section>
 			<uni-list-item title="星期" to="/pages/week-select/week-select" showArrow="true">
 				<template slot="footer">
 					<view class="list-item-subtitle">{{weekDesc}}</view>
@@ -72,7 +72,7 @@
 
 			</uni-list-item>
 			<uni-section title="其他"></uni-section>
-			<uni-list-item title="自动打卡记录" to="/pages/clock-history/clock-history" showArrow="true">
+			<uni-list-item title="操作记录" to="/pages/clock-history/clock-history" showArrow="true">
 			</uni-list-item>
 			<uni-list-item title="密码保护" clickable @click="securityClick">
 				<template slot="footer">
@@ -114,25 +114,25 @@
 				show: true,
 				timer: null,
 				gotoStartTimerPickerConfig: {
-					title: '选择【上班】打卡起始时间',
+					title: '选择钉钉打开测试1起始时间',
 					show: false,
 					default: '09:00',
 					value: uni.getStorageSync(this.$config.gotoStartTimeStorageKey)
 				},
 				gotoEndTimerPickerConfig: {
-					title: '选择【上班】打卡结束时间',
+					title: '选择钉钉打开测试1结束时间',
 					show: false,
 					default: '09:30',
 					value: uni.getStorageSync(this.$config.gotoEndTimeStorageKey)
 				},
 				gooffStartTimerPickerConfig: {
-					title: '选择【下班】打卡开始时间',
+					title: '选择钉钉打开测试2开始时间',
 					show: false,
 					default: '17:30',
 					value: uni.getStorageSync(this.$config.gooffStartTimeStorageKey)
 				},
 				gooffEndTimerPickerConfig: {
-					title: '选择【下班】打卡结束时间',
+					title: '选择钉钉打开测试2结束时间',
 					show: false,
 					default: '18:00',
 					value: uni.getStorageSync(this.$config.gooffEndTimeStorageKey)
@@ -211,7 +211,7 @@
 			if (!uni.getStorageSync(this.$config.iosOpenedDingtalkKey)) {
 				uni.showModal({
 					title: '请允许首次打开钉钉',
-					content: '为了避免打开钉钉失败，请允许此应用打开钉钉，点击【下一步】后若系统提示是否允许“钉钉打卡助手”打开“钉钉”，请点击允许，若直接跳转钉钉也是正常的。',
+					content: '为了避免打开钉钉失败，请允许此应用打开钉钉，点击【下一步】后若系统提示是否允许“钉钉打开测试工具”打开“钉钉”，请点击允许，若直接跳转钉钉也是正常的。',
 					success: (res) => {
 						if (res.confirm) {
 							this.openDingTalk();
