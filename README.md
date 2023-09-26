@@ -17,7 +17,5 @@
  # 若HbuilderX无法找到手机，请参阅文档：[https://ask.dcloud.net.cn/article/97](https://ask.dcloud.net.cn/article/97)
  ***
 
-## 预览
-<img src="http://www.zxlee.cn/OpenDingTalkHelperForiOSDemo1.gif"/>
  
  
